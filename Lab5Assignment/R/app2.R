@@ -2,18 +2,13 @@ library(shiny)
 
 library(ggplot2)
 library(readxl)
-url <- "https://data.val.se/val/val2014/statistik/2014_riksdagsval_per_kommun.xls"
-GET(url = url, write_disk(tf <- tempfile(fileext = ".xls")))
-get_data_temp <- read_excel(tf, 1L, col_names = TRUE)
-get_data <- get_data_temp[-1,]
-colnames(get_data) <- c(get_data[1,])
-get_data <- get_data[-1,]
+get_data <- read_excel("2014_riksdagsval_per_kommun.xls")
 ui <- fluidPage(
   titlePanel("Comprehensive statistics on the 2014 election in Sweden"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("Municipality_name","Municipality",
-                  unique(as.character(get_data$KOMMUN))),
+      textInput("County_name","County"),
+      textInput("Municipality_name","Municipality"),
       actionButton("button", "Results")
       
     ),
@@ -34,10 +29,10 @@ server <- function(input, output) {
       names(get_data_df)[names(get_data_df) == "KOMMUN"] <- "Municipality"
       
       
-      PartyVoteShare <- function(Municipality_name){
-        if( is.character(Municipality_name)){
+      PartyVoteShare <- function(County_name, Municipality_name){
+        if(is.character(County_name) & is.character(Municipality_name)){
           
-          get_req_row_data <- get_data_df[get_data_df$Municipality == (input$Municipality_name), ]
+          get_req_row_data <- get_data_df[get_data_df$County == (input$County_name) & get_data_df$Municipality == (input$Municipality_name), ]
           sub_df <- get_req_row_data[-c(1,2,4,6,8,10,12,14,16,18,20,22,24,26,27,28,29,30,31)]
           t_sub_df <- t(sub_df)
           row.names(t_sub_df) <-c("M","C","FP","KD","S","V","MP","SD","FI","OVR","BL","OG")
@@ -58,7 +53,7 @@ server <- function(input, output) {
       
       #PartyVoteShare(County_name = "Blekinge län",Municipality_name = "Karlshamn")
       
-      PartyVoteShare(Municipality_name = (input$Municipality_name))
+      PartyVoteShare(County_name = (input$County_name),Municipality_name = (input$Municipality_name))
       
       
       
