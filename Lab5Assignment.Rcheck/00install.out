@@ -1,0 +1,36 @@
+* installing *source* package 'Lab5Assignment' ...
+** using staged installation
+** R
+** byte-compile and prepare package for lazy loading
+New names:
+* `` -> ...2
+* `` -> ...3
+* `` -> ...4
+* `` -> ...5
+* `` -> ...6
+* ... and 26 more problems
+New names:
+* `` -> ...2
+* `` -> ...3
+* `` -> ...4
+* `` -> ...5
+* `` -> ...6
+* ... and 26 more problems
+New names:
+* `` -> ...2
+* `` -> ...3
+* `` -> ...4
+* `` -> ...5
+* `` -> ...6
+* ... and 26 more problems
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+*** arch - i386
+*** arch - x64
+** testing if installed package can be loaded from final location
+*** arch - i386
+*** arch - x64
+** testing if installed package keeps a record of temporary installation path
+* DONE (Lab5Assignment)

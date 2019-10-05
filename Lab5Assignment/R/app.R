@@ -1,70 +1,48 @@
-library(shiny)
-
-library(ggplot2)
-library(readxl)
+library(httr)
 url <- "https://data.val.se/val/val2014/statistik/2014_riksdagsval_per_kommun.xls"
-GET(url = url, write_disk(tf <- tempfile(fileext = ".xls")))
-get_data_temp <- read_excel(tf, 1L, col_names = TRUE)
-get_data <- get_data_temp[-1,]
-colnames(get_data) <- c(get_data[1,])
-get_data <- get_data[-1,]
-ui <- fluidPage(
-  titlePanel("Comprehensive statistics on the 2014 election in Sweden"),
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("Municipality_name","Municipality",
-                  unique(as.character(get_data$KOMMUN))),
-      actionButton("button", "Results")
+GET(url = url, httr::write_disk(tfo <- tempfile(fileext = ".xls")))
+get_data_temp_s <- readxl::read_excel(tfo, 1L, col_names = TRUE)
+get_data_s <- get_data_temp_s[-1,]
+colnames(get_data_s) <- c(get_data_s[1,])
+get_data_s <- get_data_s[-1,]
+colnames(get_data_s) <- c("LAN","KOM","County","Municipality","M","MPER","C","CPER","FP","FPPER","KD","KDPER","S","SPER","V","VPER","MP","MPPER","SD","SDPER","FI","FPPER","OVR","OVRPER","BL","BLPER","OGPER","OG")
+ui <- shiny::fluidPage(
+  shiny::titlePanel("Comprehensive statistics on the 2014 election in Sweden"),
+  shiny::sidebarLayout(
+    shiny::sidebarPanel(
+      shiny::selectInput("Municipality_name","Municipality",
+                  unique(as.character(get_data_s$Municipality))),
+      shiny::actionButton("button_mun", "Municipality Results"),
+      shiny::selectInput("County_name","County",
+                  unique(as.character(get_data_s$County))),
+      shiny::actionButton("button_coun", "County Results")
       
     ),
-    mainPanel(plotOutput("p"))
+    shiny::mainPanel(shiny::plotOutput("p"),
+                     shiny::br(),
+                     shiny::br(),
+              shiny::plotOutput("p2"))
   )
 )
 server <- function(input, output) {
-  observeEvent(input$button, {
+  shiny::observeEvent(input$button_mun, {
     
-    
-    
-    output$p <- renderPlot({
-      
-      get_data_df <- as.data.frame(get_data)
-      get_data_df$LAN <- NULL
-      get_data_df$KOM <- NULL
-      names(get_data_df)[names(get_data_df) == "LÄN"] <- "County"
-      names(get_data_df)[names(get_data_df) == "KOMMUN"] <- "Municipality"
-      
-      
-      PartyVoteShare <- function(Municipality_name){
-        if( is.character(Municipality_name)){
-          
-          get_req_row_data <- get_data_df[get_data_df$Municipality == (input$Municipality_name), ]
-          sub_df <- get_req_row_data[-c(1,2,4,6,8,10,12,14,16,18,20,22,24,26,27,28,29,30,31)]
-          t_sub_df <- t(sub_df)
-          row.names(t_sub_df) <-c("M","C","FP","KD","S","V","MP","SD","FI","OVR","BL","OG")
-          x_axis <- row.names(t_sub_df)
-          y_axis <- as.vector(t_sub_df[,1])
-          partynames <- c("M = Moderates","C = The Center Party","FP = The Liberal Party","KD = The Christian Democrats",
-                          "S = Labor-Socialdemokraterna","V = The Left","MP = The environmental party the Greens","SD = Sweden Democrats",
-                          "FI = Feminist Initiative","OVR = Other parties","BL = Invalid voices - blank","OG = Invalid votes - others")
-          
-          fun1_df <- data.frame(PartyNames = x_axis, TotalVotes = y_axis  )
-          p<-ggplot(data=fun1_df, aes(x=PartyNames, y=TotalVotes, fill=partynames)) +
-            geom_bar(stat="identity") + 
-            geom_text(aes(label=TotalVotes), vjust=1.6, color="black", size=3.5) + 
-            theme_minimal()
-          return(p)
-        } else print("Input arguments are not character type : Check your Input")
-      }
-      
-      #PartyVoteShare(County_name = "Blekinge län",Municipality_name = "Karlshamn")
-      
-      PartyVoteShare(Municipality_name = (input$Municipality_name))
-      
-      
+    output$p <- shiny::renderPlot({
+      source("./MunicipalityResults.r")
+      MunicipalityResults(Municipality_name = (input$Municipality_name))
       
     })
   })
-  
+
+  shiny::observeEvent(input$button_coun, {
+    
+    output$p2 <- shiny::renderPlot({
+      source("./CountyResults.R")
+      CountyResults(County_name = (input$County_name))
+    
+
+    }) 
+  }) 
   
 }
-shinyApp(ui = ui, server = server)
+shiny::shinyApp(ui = ui, server = server)
