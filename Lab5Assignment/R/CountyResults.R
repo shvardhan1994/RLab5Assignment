@@ -29,7 +29,7 @@ CountyResults <- function(County_name){
   #names(get_data_df)[names(get_data_df) == "KOMMUN"] <- "Municipality"
   #names(get_data_df)[names(get_data_df) == "LÄN"] <- "County"
   
-  if( is.character(County_name)){
+  if( is.character(County_name) & County_name %in% get_data_df$County){
     
     county_df_temp <- get_data_df[get_data_df$County == County_name,]
     county_df <- county_df_temp[-c(1,2,4,6,8,10,12,14,16,18,20,22,24,26,27,28,29,30,31)]
@@ -49,7 +49,7 @@ CountyResults <- function(County_name){
       geom_text(aes(label=TotalVotes), vjust=1.6, color="black", size=3.5) + 
       theme_minimal() + labs(title = "County Result")
     return(p2)
-  } else print("Input arguments are not character type : Check your Input")
+  } else stop("Input arguments are not character type : Check your Input")
 }
 
 #CountyResults(County_name = "Dalarnas län")

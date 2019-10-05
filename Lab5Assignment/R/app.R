@@ -1,6 +1,6 @@
-library(httr)
+
 url <- "https://data.val.se/val/val2014/statistik/2014_riksdagsval_per_kommun.xls"
-GET(url = url, httr::write_disk(tfo <- tempfile(fileext = ".xls")))
+httr::GET(url = url, httr::write_disk(tfo <- tempfile(fileext = ".xls")))
 get_data_temp_s <- readxl::read_excel(tfo, 1L, col_names = TRUE)
 get_data_s <- get_data_temp_s[-1,]
 colnames(get_data_s) <- c(get_data_s[1,])

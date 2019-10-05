@@ -31,7 +31,7 @@ MunicipalityResults <- function(Municipality_name){
   get_data_df$LAN <- NULL
   get_data_df$KOM <- NULL
   colnames(get_data_df) <- c("County","Municipality","M","MPER","C","CPER","FP","FPPER","KD","KDPER","S","SPER","V","VPER","MP","MPPER","SD","SDPER","FI","FPPER","OVR","OVRPER","BL","BLPER","OGPER","OG")
-  if( is.character(Municipality_name)){
+  if( is.character(Municipality_name) & Municipality_name %in% get_data_df$Municipality ){
     
     get_req_row_data <- get_data_df[get_data_df$Municipality == Municipality_name, ]
     sub_df <- get_req_row_data[,-c(1,2,4,6,8,10,12,14,16,18,20,22,24,26,27,28,29,30,31)]
@@ -50,7 +50,7 @@ MunicipalityResults <- function(Municipality_name){
       geom_text(aes(label=TotalVotes), vjust=1.6, color="black", size=3.5) + 
       theme_minimal() + labs(title = "Municipality Result")
     return(p)
-  } else print("Input arguments are not character type : Check your Input")
+  } else stop("Input arguments are not character type : Check your Input")
 }
 
 

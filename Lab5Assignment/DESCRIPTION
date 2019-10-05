@@ -10,3 +10,5 @@ License: MIT + file LICENSE
 Depends: R (>= 2.10)
 RoxygenNote: 6.1.1
 Imports: httr,ggplot2,shiny,readxl,methods
+Suggests: 
+    testthat
