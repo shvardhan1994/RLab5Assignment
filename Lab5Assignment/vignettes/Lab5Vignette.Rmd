@@ -36,6 +36,7 @@ CountyResults(County_name = "Dalarnas län")
 MunicipalityResults(Municipality_name = "Karlshamn")
 ```
 
+<p> A new repository "Lab5ShinyApp" under github repository "shvardhan1994" has been created for Shiny Application and can be launched using below code
 # Running the Shiny app 
 ```{r run, eval=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 # run the shiny app from github
