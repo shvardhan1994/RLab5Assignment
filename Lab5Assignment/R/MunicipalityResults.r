@@ -45,10 +45,10 @@ MunicipalityResults <- function(Municipality_name){
     PartyNames <- vector()
     TotalVotes <- vector()
     fun1_df <- data.frame(PartyNames = x_axis, TotalVotes = y_axis  )
-    p<-ggplot2::ggplot(data=fun1_df, aes(x=PartyNames, y=TotalVotes, fill=partynames)) +
-      geom_bar(stat="identity") + 
-      geom_text(aes(label=TotalVotes), vjust=1.6, color="black", size=3.5) + 
-      theme_minimal() + labs(title = "Municipality Result")
+    p<-ggplot2::ggplot(data=fun1_df, ggplot2::aes(x=PartyNames, y=TotalVotes, fill=partynames)) +
+      ggplot2::geom_bar(stat="identity") + 
+      ggplot2::geom_text(aes(label=TotalVotes), vjust=1.6, color="black", size=3.5) + 
+      ggplot2::theme_minimal() + ggplot2::labs(title = "Municipality Result")
     return(p)
   } else stop("Input arguments are not character type : Check your Input")
 }
